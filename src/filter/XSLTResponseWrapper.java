@@ -9,6 +9,7 @@ public class XSLTResponseWrapper extends HttpServletResponseWrapper {
 	
 	private ResponseBufferWriter buffer = null;
 	
+	//생성자
 	public XSLTResponseWrapper(HttpServletResponse response) {
 		super(response);
 		buffer = new ResponseBufferWriter();

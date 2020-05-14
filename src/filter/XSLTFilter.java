@@ -39,7 +39,8 @@ public class XSLTFilter implements Filter {
 		chain.doFilter(request, responseWrapper);
 		
 		//XSL/T 변환
-		try {
+		try {			
+			//1. XSL 트랜스포머 생성
 			TransformerFactory factory = TransformerFactory.newInstance();
 			Reader xslReader = new BufferedReader(new FileReader(xslPath));
 			
@@ -47,13 +48,18 @@ public class XSLTFilter implements Filter {
 			
 			Transformer transformer = factory.newTransformer(xslSource);
 			
+			//2. XML 스트림 소스 생성
 			String xmlDocument = responseWrapper.getBufferedString();
 			Reader xmlReader = new StringReader(xmlDocument);
 			StreamSource xmlSource = new StreamSource(xmlReader);
 			
+			//3. XML을 XSL을 이용해 HTML로 변환 후 넣을 공간(버퍼) 생성
 			StringWriter buffer = new StringWriter(4096);
+			
+			//4. 트랜스폼(변환) 실행 후 결과물 버퍼에 저장
 			transformer.transform(xmlSource, new StreamResult(buffer));
 			
+			//5. 버퍼에 있는 내용 출력
 			writer.print(buffer.toString());
 			
 		} catch (Exception ex) {
@@ -69,6 +75,5 @@ public class XSLTFilter implements Filter {
 	public void destroy() {
 		
 	}
-
 
 }
